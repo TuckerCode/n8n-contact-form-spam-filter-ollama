@@ -1,0 +1,208 @@
+{
+  "case": "link-stuffed",
+  "expect": "spam by rules, before the model is trusted",
+  "payload": {
+    "Name": "Best Deals",
+    "Email": "deals@example.biz",
+    "Message": "Cheap watches http://a.example http://b.example http://c.example",
+    "submittedAt": "2026-10-18T19:02:00.000+01:00",
+    "formMode": "production"
+  },
+  "execution_id": 164,
+  "status": "success",
+  "seconds": 4.2,
+  "nodes_run": [
+    "Test Webhook",
+    "Unwrap Sample (test only)",
+    "Set Filter Settings",
+    "Check Message And Build Prompt",
+    "Ask Ollama Spam Or Genuine",
+    "Decide Spam Or Genuine",
+    "Genuine Enquiry?",
+    "Spam Not Forwarded"
+  ],
+  "node_outputs": {
+    "Test Webhook": [
+      [
+        {
+          "json": {
+            "headers": {
+              "accept-encoding": "identity",
+              "content-length": "205",
+              "host": "127.0.0.1:5678",
+              "user-agent": "Python-urllib/3.12",
+              "cookie": "",
+              "content-type": "application/json",
+              "connection": "close"
+            },
+            "params": {},
+            "query": {},
+            "body": {
+              "Name": "Best Deals",
+              "Email": "deals@example.biz",
+              "Message": "Cheap watches http://a.example http://b.example http://c.example",
+              "submittedAt": "2026-10-18T19:02:00.000+01:00",
+              "formMode": "production"
+            },
+            "webhookUrl": "http://localhost:5678/webhook/free-test-spam",
+            "executionMode": "production"
+          }
+        }
+      ]
+    ],
+    "Unwrap Sample (test only)": [
+      [
+        {
+          "json": {
+            "Name": "Best Deals",
+            "Email": "deals@example.biz",
+            "Message": "Cheap watches http://a.example http://b.example http://c.example",
+            "submittedAt": "2026-10-18T19:02:00.000+01:00",
+            "formMode": "production"
+          }
+        }
+      ]
+    ],
+    "Set Filter Settings": [
+      [
+        {
+          "json": {
+            "Name": "Best Deals",
+            "Email": "deals@example.biz",
+            "Message": "Cheap watches http://a.example http://b.example http://c.example",
+            "submittedAt": "2026-10-18T19:02:00.000+01:00",
+            "formMode": "production",
+            "ollama_url": "http://localhost:11434",
+            "ollama_model": "qwen2.5:3b",
+            "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "max_links": 2,
+            "spam_phrases": "seo,backlinks,guest post,first page of google,web design services,lead generation,crypto,bitcoin,casino,loan offer"
+          }
+        }
+      ]
+    ],
+    "Check Message And Build Prompt": [
+      [
+        {
+          "json": {
+            "name": "Best Deals",
+            "email": "deals@example.biz",
+            "message": "Cheap watches http://a.example http://b.example http://c.example",
+            "submitted_at": "2026-10-18T19:02:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 3,
+            "phrase_hits": [],
+            "hard_spam_reasons": [
+              "3 links in the message (limit 2)"
+            ],
+            "ollama_request": {
+              "url": "http://localhost:11434/api/chat",
+              "body": {
+                "model": "qwen2.5:3b",
+                "stream": false,
+                "format": "json",
+                "options": {
+                  "temperature": 0
+                },
+                "messages": [
+                  {
+                    "role": "system",
+                    "content": "You screen messages sent through the contact form of this business: a small bakery in Leeds that takes cake orders and runs baking classes.\nDecide if a real person is writing to this business about something they want from it:\na question, an order, a booking, a quote request, a complaint, or a reply to something the business sent.\nSpam is: unsolicited sales pitches (SEO, marketing, web design, app development, lead lists, funding),\nscams, link drops, adult or gambling content, and text that makes no sense.\nIf you are unsure, choose genuine. A missed customer costs more than one spam email.\nAnswer with JSON only, in this shape:\n{\"verdict\": \"genuine\", \"reason\": \"one short sentence\"}\nverdict must be \"genuine\" or \"spam\"."
+                  },
+                  {
+                    "role": "user",
+                    "content": "NAME: Best Deals\nEMAIL: deals@example.biz\nLINKS IN MESSAGE: 3\nWATCH-LIST PHRASES FOUND: none\n\nMESSAGE:\nCheap watches http://a.example http://b.example http://c.example"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    ],
+    "Ask Ollama Spam Or Genuine": [
+      [
+        {
+          "json": {
+            "model": "qwen2.5:3b",
+            "created_at": "2026-10-18T22:36:03.647619627Z",
+            "message": {
+              "role": "assistant",
+              "content": "{\"verdict\": \"spam\", \"reason\": \"contains links and watch-related phrases\"}"
+            },
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 3714974314,
+            "load_duration": 847234,
+            "prompt_eval_count": 225,
+            "prompt_eval_cached_count": 176,
+            "prompt_eval_duration": 1518294000,
+            "eval_count": 19,
+            "eval_duration": 2181978000
+          }
+        }
+      ]
+    ],
+    "Decide Spam Or Genuine": [
+      [
+        {
+          "json": {
+            "is_spam": true,
+            "decided_by": "rules",
+            "reason": "3 links in the message (limit 2)",
+            "name": "Best Deals",
+            "email": "deals@example.biz",
+            "message": "Cheap watches http://a.example http://b.example http://c.example",
+            "submitted_at": "2026-10-18T19:02:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 3,
+            "phrase_hits": []
+          }
+        }
+      ]
+    ],
+    "Genuine Enquiry?": [
+      [],
+      [
+        {
+          "json": {
+            "is_spam": true,
+            "decided_by": "rules",
+            "reason": "3 links in the message (limit 2)",
+            "name": "Best Deals",
+            "email": "deals@example.biz",
+            "message": "Cheap watches http://a.example http://b.example http://c.example",
+            "submitted_at": "2026-10-18T19:02:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 3,
+            "phrase_hits": []
+          }
+        }
+      ]
+    ],
+    "Spam Not Forwarded": [
+      [
+        {
+          "json": {
+            "is_spam": true,
+            "decided_by": "rules",
+            "reason": "3 links in the message (limit 2)",
+            "name": "Best Deals",
+            "email": "deals@example.biz",
+            "message": "Cheap watches http://a.example http://b.example http://c.example",
+            "submitted_at": "2026-10-18T19:02:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 3,
+            "phrase_hits": []
+          }
+        }
+      ]
+    ]
+  }
+}

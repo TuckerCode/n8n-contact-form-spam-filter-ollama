@@ -1,0 +1,20 @@
+From: forms@example.com
+To: you@example.com
+Reply-To: priya.shah@example.com
+Subject: New enquiry from Priya Shah
+Message-ID: <da49a0be-9497-fe91-2a54-ee8c6dc31eec@example.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 21 Oct 2026 00:10:32 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Priya Shah <priya.shah@example.com> wrote:
+
+Hello, could I order a lemon =
+drizzle cake for 12 people for Saturday 31 October? I would collect it in =
+the morning. Please let me know the price.
+
+---
+Passed the spam filter =
+(model): order
+Reply to this email to answer them.

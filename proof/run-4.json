@@ -1,0 +1,206 @@
+{
+  "case": "short-genuine-question",
+  "expect": "genuine, forwarded",
+  "payload": {
+    "Name": "Tom",
+    "Email": "tom.b@example.co.uk",
+    "Message": "Are you open on Sundays?",
+    "submittedAt": "2026-10-18T19:03:00.000+01:00",
+    "formMode": "production"
+  },
+  "execution_id": 165,
+  "status": "success",
+  "seconds": 5.6,
+  "nodes_run": [
+    "Test Webhook",
+    "Unwrap Sample (test only)",
+    "Set Filter Settings",
+    "Check Message And Build Prompt",
+    "Ask Ollama Spam Or Genuine",
+    "Decide Spam Or Genuine",
+    "Genuine Enquiry?",
+    "Email Me The Enquiry"
+  ],
+  "node_outputs": {
+    "Test Webhook": [
+      [
+        {
+          "json": {
+            "headers": {
+              "accept-encoding": "identity",
+              "content-length": "160",
+              "host": "127.0.0.1:5678",
+              "user-agent": "Python-urllib/3.12",
+              "cookie": "",
+              "content-type": "application/json",
+              "connection": "close"
+            },
+            "params": {},
+            "query": {},
+            "body": {
+              "Name": "Tom",
+              "Email": "tom.b@example.co.uk",
+              "Message": "Are you open on Sundays?",
+              "submittedAt": "2026-10-18T19:03:00.000+01:00",
+              "formMode": "production"
+            },
+            "webhookUrl": "http://localhost:5678/webhook/free-test-spam",
+            "executionMode": "production"
+          }
+        }
+      ]
+    ],
+    "Unwrap Sample (test only)": [
+      [
+        {
+          "json": {
+            "Name": "Tom",
+            "Email": "tom.b@example.co.uk",
+            "Message": "Are you open on Sundays?",
+            "submittedAt": "2026-10-18T19:03:00.000+01:00",
+            "formMode": "production"
+          }
+        }
+      ]
+    ],
+    "Set Filter Settings": [
+      [
+        {
+          "json": {
+            "Name": "Tom",
+            "Email": "tom.b@example.co.uk",
+            "Message": "Are you open on Sundays?",
+            "submittedAt": "2026-10-18T19:03:00.000+01:00",
+            "formMode": "production",
+            "ollama_url": "http://localhost:11434",
+            "ollama_model": "qwen2.5:3b",
+            "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "max_links": 2,
+            "spam_phrases": "seo,backlinks,guest post,first page of google,web design services,lead generation,crypto,bitcoin,casino,loan offer"
+          }
+        }
+      ]
+    ],
+    "Check Message And Build Prompt": [
+      [
+        {
+          "json": {
+            "name": "Tom",
+            "email": "tom.b@example.co.uk",
+            "message": "Are you open on Sundays?",
+            "submitted_at": "2026-10-18T19:03:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": [],
+            "hard_spam_reasons": [],
+            "ollama_request": {
+              "url": "http://localhost:11434/api/chat",
+              "body": {
+                "model": "qwen2.5:3b",
+                "stream": false,
+                "format": "json",
+                "options": {
+                  "temperature": 0
+                },
+                "messages": [
+                  {
+                    "role": "system",
+                    "content": "You screen messages sent through the contact form of this business: a small bakery in Leeds that takes cake orders and runs baking classes.\nDecide if a real person is writing to this business about something they want from it:\na question, an order, a booking, a quote request, a complaint, or a reply to something the business sent.\nSpam is: unsolicited sales pitches (SEO, marketing, web design, app development, lead lists, funding),\nscams, link drops, adult or gambling content, and text that makes no sense.\nIf you are unsure, choose genuine. A missed customer costs more than one spam email.\nAnswer with JSON only, in this shape:\n{\"verdict\": \"genuine\", \"reason\": \"one short sentence\"}\nverdict must be \"genuine\" or \"spam\"."
+                  },
+                  {
+                    "role": "user",
+                    "content": "NAME: Tom\nEMAIL: tom.b@example.co.uk\nLINKS IN MESSAGE: 0\nWATCH-LIST PHRASES FOUND: none\n\nMESSAGE:\nAre you open on Sundays?"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    ],
+    "Ask Ollama Spam Or Genuine": [
+      [
+        {
+          "json": {
+            "model": "qwen2.5:3b",
+            "created_at": "2026-10-18T22:36:08.998825079Z",
+            "message": {
+              "role": "assistant",
+              "content": "{\"verdict\": \"genuine\", \"reason\": \"Are you open on Sundays?\"}"
+            },
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 4476914439,
+            "load_duration": 3758896,
+            "prompt_eval_count": 218,
+            "prompt_eval_cached_count": 176,
+            "prompt_eval_duration": 1479038000,
+            "eval_count": 20,
+            "eval_duration": 2982663000
+          }
+        }
+      ]
+    ],
+    "Decide Spam Or Genuine": [
+      [
+        {
+          "json": {
+            "is_spam": false,
+            "decided_by": "model",
+            "reason": "Are you open on Sundays?",
+            "name": "Tom",
+            "email": "tom.b@example.co.uk",
+            "message": "Are you open on Sundays?",
+            "submitted_at": "2026-10-18T19:03:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": []
+          }
+        }
+      ]
+    ],
+    "Genuine Enquiry?": [
+      [
+        {
+          "json": {
+            "is_spam": false,
+            "decided_by": "model",
+            "reason": "Are you open on Sundays?",
+            "name": "Tom",
+            "email": "tom.b@example.co.uk",
+            "message": "Are you open on Sundays?",
+            "submitted_at": "2026-10-18T19:03:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": []
+          }
+        }
+      ],
+      []
+    ],
+    "Email Me The Enquiry": [
+      [
+        {
+          "json": {
+            "is_spam": false,
+            "decided_by": "model",
+            "reason": "Are you open on Sundays?",
+            "name": "Tom",
+            "email": "tom.b@example.co.uk",
+            "message": "Are you open on Sundays?",
+            "submitted_at": "2026-10-18T19:03:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": []
+          }
+        }
+      ]
+    ]
+  }
+}

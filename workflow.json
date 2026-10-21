@@ -1,0 +1,366 @@
+{
+  "name": "Filter contact form spam with a local Ollama model and email only real enquiries",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Contact us",
+        "formDescription": "Send us a message and we will reply by email.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Message",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "ignoreBots": true,
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Thanks, we got your message and will reply by email."
+            }
+          }
+        }
+      },
+      "id": "d6c61194-53ee-5446-ad61-d58eae050d81",
+      "name": "Contact Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "8a78a675-b5e9-5a55-9a6b-0fc2c7530e28"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c45c446-afcd-5738-88ff-9bb29b17b471",
+              "name": "ollama_url",
+              "value": "http://localhost:11434",
+              "type": "string"
+            },
+            {
+              "id": "06629ce0-cb93-5a39-b51b-80e1c4e70ebf",
+              "name": "ollama_model",
+              "value": "qwen2.5:3b",
+              "type": "string"
+            },
+            {
+              "id": "953dc838-cd29-5387-98be-1981eb8a2df7",
+              "name": "business_description",
+              "value": "a small bakery in Leeds that takes cake orders and runs baking classes",
+              "type": "string"
+            },
+            {
+              "id": "2a56af95-138b-5bdb-bd3d-df72389c4f99",
+              "name": "notify_email",
+              "value": "you@example.com",
+              "type": "string"
+            },
+            {
+              "id": "9a223951-eb1b-5d89-9e40-3417f7099b29",
+              "name": "from_email",
+              "value": "forms@example.com",
+              "type": "string"
+            },
+            {
+              "id": "6f4adae0-4968-5533-b7f0-e02da6a5fae0",
+              "name": "max_links",
+              "value": 2,
+              "type": "number"
+            },
+            {
+              "id": "687b1cad-cc5c-5cb9-abf0-e7a2db2473a6",
+              "name": "spam_phrases",
+              "value": "seo,backlinks,guest post,first page of google,web design services,lead generation,crypto,bitcoin,casino,loan offer",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "aa95a1f9-6b37-5611-bead-70cf5834bc74",
+      "name": "Set Filter Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// One form submission per item. Field names match the labels in the form: Name, Email, Message.\nconst m = $input.item.json;\nconst name = String(m['Name'] || '').trim();\nconst email = String(m['Email'] || '').trim();\nconst message = String(m['Message'] || '').trim();\n\n// Plain checks first. These do not need a model and catch the laziest spam.\nconst linkCount = (message.match(/(https?:\\/\\/|www\\.)/gi) || []).length;\nconst maxLinks = Number(m.max_links);\nconst hardReasons = [];\nif (/(https?:\\/\\/|www\\.)/i.test(name)) hardReasons.push('the name field contains a link');\nif (Number.isFinite(maxLinks) && linkCount > maxLinks) hardReasons.push(`${linkCount} links in the message (limit ${maxLinks})`);\n\nconst phrases = String(m.spam_phrases || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);\nconst phraseHits = phrases.filter((p) => message.toLowerCase().includes(p));\n\nconst system = [\n  `You screen messages sent through the contact form of this business: ${m.business_description || 'a small business'}.`,\n  'Decide if a real person is writing to this business about something they want from it:',\n  'a question, an order, a booking, a quote request, a complaint, or a reply to something the business sent.',\n  'Spam is: unsolicited sales pitches (SEO, marketing, web design, app development, lead lists, funding),',\n  'scams, link drops, adult or gambling content, and text that makes no sense.',\n  'If you are unsure, choose genuine. A missed customer costs more than one spam email.',\n  'Answer with JSON only, in this shape:',\n  '{\"verdict\": \"genuine\", \"reason\": \"one short sentence\"}',\n  'verdict must be \"genuine\" or \"spam\".',\n].join('\\n');\n\nconst user = [\n  `NAME: ${name}`,\n  `EMAIL: ${email}`,\n  `LINKS IN MESSAGE: ${linkCount}`,\n  phraseHits.length ? `WATCH-LIST PHRASES FOUND: ${phraseHits.join(', ')}` : 'WATCH-LIST PHRASES FOUND: none',\n  '',\n  'MESSAGE:',\n  message.slice(0, 4000),\n].join('\\n');\n\nreturn {\n  json: {\n    name, email, message,\n    submitted_at: m.submittedAt || '',\n    notify_email: m.notify_email || '',\n    from_email: m.from_email || '',\n    link_count: linkCount,\n    phrase_hits: phraseHits,\n    hard_spam_reasons: hardReasons,\n    ollama_request: {\n      url: String(m.ollama_url || 'http://localhost:11434').replace(/\\/+$/, '') + '/api/chat',\n      body: {\n        model: m.ollama_model || 'qwen2.5:3b',\n        stream: false,\n        format: 'json',\n        options: { temperature: 0 },\n        messages: [\n          { role: 'system', content: system },\n          { role: 'user', content: user },\n        ],\n      },\n    },\n  },\n};\n"
+      },
+      "id": "a8ad7c15-4ad4-5950-9c60-7e88c1cebc66",
+      "name": "Check Message And Build Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.ollama_request.url }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.ollama_request.body) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "a9e3ecac-0402-5ea2-9c77-0ca9cb28c79d",
+      "name": "Ask Ollama Spam Or Genuine",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Ollama's /api/chat answer is in message.content. With format: \"json\" it should be a JSON string,\n// but a small model sometimes wraps it in text, so take the first {...} block if a plain parse fails.\nfunction readModelJson(res) {\n  const raw = String((res && res.message && res.message.content) || res.response || '').trim();\n  if (!raw) return { ok: false, raw, data: {} };\n  try { return { ok: true, raw, data: JSON.parse(raw) }; } catch (e) {}\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (m) { try { return { ok: true, raw, data: JSON.parse(m[0]) }; } catch (e) {} }\n  return { ok: false, raw, data: {} };\n}\n\nconst f = $('Check Message And Build Prompt').item.json;\nconst parsed = readModelJson($input.item.json);\nconst modelVerdict = String(parsed.data.verdict || '').toLowerCase().trim();\nconst modelReason = String(parsed.data.reason || '').trim();\n\nlet isSpam;\nlet decidedBy;\nlet reason;\nif (f.hard_spam_reasons.length) {\n  isSpam = true; decidedBy = 'rules'; reason = f.hard_spam_reasons.join('; ');\n} else if (modelVerdict === 'spam') {\n  isSpam = true; decidedBy = 'model'; reason = modelReason || 'the model called it spam';\n} else if (modelVerdict === 'genuine') {\n  isSpam = false; decidedBy = 'model'; reason = modelReason || 'the model called it genuine';\n} else {\n  // Unreadable answer: let it through, so a real customer is never lost to a model hiccup.\n  isSpam = false; decidedBy = 'fallback'; reason = 'the model answer could not be read, so it was let through';\n}\n\nreturn {\n  json: {\n    is_spam: isSpam,\n    decided_by: decidedBy,\n    reason,\n    name: f.name,\n    email: f.email,\n    message: f.message,\n    submitted_at: f.submitted_at,\n    notify_email: f.notify_email,\n    from_email: f.from_email,\n    link_count: f.link_count,\n    phrase_hits: f.phrase_hits,\n  },\n};\n"
+      },
+      "id": "b96a09ae-0695-5bdc-bae6-895dc78eb702",
+      "name": "Decide Spam Or Genuine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5008dab7-662c-50e6-8d74-1e6b1c6f5763",
+              "leftValue": "={{ $json.is_spam }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a8b0990d-d7f0-574d-b17a-7c2ed572db93",
+      "name": "Genuine Enquiry?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $json.from_email }}",
+        "toEmail": "={{ $json.notify_email }}",
+        "subject": "=New enquiry from {{ $json.name }}",
+        "emailFormat": "text",
+        "text": "={{ $json.name }} <{{ $json.email }}> wrote:\n\n{{ $json.message }}\n\n---\nPassed the spam filter ({{ $json.decided_by }}): {{ $json.reason }}\nReply to this email to answer them.",
+        "options": {
+          "appendAttribution": false,
+          "replyTo": "={{ $json.email }}"
+        }
+      },
+      "id": "0a842a01-5e94-5327-bc6f-c44cac45194b",
+      "name": "Email Me The Enquiry",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1340,
+        -100
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5c304353-6776-5462-af0a-c11ae66f91a0",
+      "name": "Spam Not Forwarded",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Filter contact form spam with a local Ollama model and email only real enquiries\n\nFor small businesses whose contact form inbox fills up with SEO pitches, link drops and scams. This workflow gives you a contact form, screens every message, and emails you only the ones from real people. You can reply straight from that email.\n\nThe spam check runs on your own machine through Ollama, so there is no AI bill and no message text goes to an AI company.\n\n### How it works\n1. A visitor fills in the n8n form (Name, Email, Message). Everyone sees the same thank-you text, so spammers learn nothing.\n2. Plain rules run first. A link in the name field, or more links than max_links, marks the message as spam with no model call needed.\n3. Ollama reads the message with a short description of your business and answers genuine or spam, with a reason.\n4. Genuine messages are emailed to you with Reply-To set to the visitor. Spam stops at Spam Not Forwarded and stays visible in the execution log.\n5. If the model answer cannot be read, the message is let through, so a model failure never drops a message.\n\n### Setup\n1. Install Ollama and pull a model, for example `ollama pull qwen2.5:3b`.\n2. In **Set Filter Settings**, describe your business in one sentence and set notify_email and from_email.\n3. Connect an SMTP credential on **Email Me The Enquiry**.\n4. If n8n runs in Docker, set ollama_url to `http://host.docker.internal:11434`.\n5. Activate the workflow and share the form's production URL, or link it from your website.\n\n### Customization tips\nAdd your own phrases to spam_phrases. Swap the email node for Slack or Telegram if you prefer.",
+        "height": 900,
+        "width": 520
+      },
+      "id": "522a84db-30fb-5863-9557-89d50972e4aa",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Receive the form\n\nThe n8n form collects Name, Email and Message. Set Filter Settings holds everything you change.",
+        "height": 500,
+        "width": 420,
+        "color": 7
+      },
+      "id": "e8b584a1-c953-59c0-aacf-d50766e2f635",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Screen the message\n\nRules catch link-stuffed spam. Ollama decides genuine or spam for the rest, using your business description.",
+        "height": 500,
+        "width": 640,
+        "color": 7
+      },
+      "id": "1a294e28-a461-5552-806c-b77b08c96ee7",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Forward real enquiries\n\nGenuine messages are emailed to you with Reply-To set to the visitor. Spam is not forwarded.",
+        "height": 600,
+        "width": 460,
+        "color": 7
+      },
+      "id": "fce6110d-7205-544b-89b0-d44e4f7d2777",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -340
+      ]
+    }
+  ],
+  "connections": {
+    "Contact Form": {
+      "main": [
+        [
+          {
+            "node": "Set Filter Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Filter Settings": {
+      "main": [
+        [
+          {
+            "node": "Check Message And Build Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message And Build Prompt": {
+      "main": [
+        [
+          {
+            "node": "Ask Ollama Spam Or Genuine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask Ollama Spam Or Genuine": {
+      "main": [
+        [
+          {
+            "node": "Decide Spam Or Genuine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decide Spam Or Genuine": {
+      "main": [
+        [
+          {
+            "node": "Genuine Enquiry?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Genuine Enquiry?": {
+      "main": [
+        [
+          {
+            "node": "Email Me The Enquiry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Spam Not Forwarded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

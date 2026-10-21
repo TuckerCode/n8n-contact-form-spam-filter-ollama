@@ -1,0 +1,222 @@
+{
+  "case": "seo-pitch",
+  "expect": "spam by the model",
+  "payload": {
+    "Name": "Mark Johnson",
+    "Email": "mark@rank-agency.example",
+    "Message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+    "submittedAt": "2026-10-18T19:01:00.000+01:00",
+    "formMode": "production"
+  },
+  "execution_id": 163,
+  "status": "success",
+  "seconds": 6.3,
+  "nodes_run": [
+    "Test Webhook",
+    "Unwrap Sample (test only)",
+    "Set Filter Settings",
+    "Check Message And Build Prompt",
+    "Ask Ollama Spam Or Genuine",
+    "Decide Spam Or Genuine",
+    "Genuine Enquiry?",
+    "Spam Not Forwarded"
+  ],
+  "node_outputs": {
+    "Test Webhook": [
+      [
+        {
+          "json": {
+            "headers": {
+              "accept-encoding": "identity",
+              "content-length": "357",
+              "host": "127.0.0.1:5678",
+              "user-agent": "Python-urllib/3.12",
+              "cookie": "",
+              "content-type": "application/json",
+              "connection": "close"
+            },
+            "params": {},
+            "query": {},
+            "body": {
+              "Name": "Mark Johnson",
+              "Email": "mark@rank-agency.example",
+              "Message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+              "submittedAt": "2026-10-18T19:01:00.000+01:00",
+              "formMode": "production"
+            },
+            "webhookUrl": "http://localhost:5678/webhook/free-test-spam",
+            "executionMode": "production"
+          }
+        }
+      ]
+    ],
+    "Unwrap Sample (test only)": [
+      [
+        {
+          "json": {
+            "Name": "Mark Johnson",
+            "Email": "mark@rank-agency.example",
+            "Message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+            "submittedAt": "2026-10-18T19:01:00.000+01:00",
+            "formMode": "production"
+          }
+        }
+      ]
+    ],
+    "Set Filter Settings": [
+      [
+        {
+          "json": {
+            "Name": "Mark Johnson",
+            "Email": "mark@rank-agency.example",
+            "Message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+            "submittedAt": "2026-10-18T19:01:00.000+01:00",
+            "formMode": "production",
+            "ollama_url": "http://localhost:11434",
+            "ollama_model": "qwen2.5:3b",
+            "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "max_links": 2,
+            "spam_phrases": "seo,backlinks,guest post,first page of google,web design services,lead generation,crypto,bitcoin,casino,loan offer"
+          }
+        }
+      ]
+    ],
+    "Check Message And Build Prompt": [
+      [
+        {
+          "json": {
+            "name": "Mark Johnson",
+            "email": "mark@rank-agency.example",
+            "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+            "submitted_at": "2026-10-18T19:01:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": [
+              "seo",
+              "backlinks",
+              "first page of google"
+            ],
+            "hard_spam_reasons": [],
+            "ollama_request": {
+              "url": "http://localhost:11434/api/chat",
+              "body": {
+                "model": "qwen2.5:3b",
+                "stream": false,
+                "format": "json",
+                "options": {
+                  "temperature": 0
+                },
+                "messages": [
+                  {
+                    "role": "system",
+                    "content": "You screen messages sent through the contact form of this business: a small bakery in Leeds that takes cake orders and runs baking classes.\nDecide if a real person is writing to this business about something they want from it:\na question, an order, a booking, a quote request, a complaint, or a reply to something the business sent.\nSpam is: unsolicited sales pitches (SEO, marketing, web design, app development, lead lists, funding),\nscams, link drops, adult or gambling content, and text that makes no sense.\nIf you are unsure, choose genuine. A missed customer costs more than one spam email.\nAnswer with JSON only, in this shape:\n{\"verdict\": \"genuine\", \"reason\": \"one short sentence\"}\nverdict must be \"genuine\" or \"spam\"."
+                  },
+                  {
+                    "role": "user",
+                    "content": "NAME: Mark Johnson\nEMAIL: mark@rank-agency.example\nLINKS IN MESSAGE: 0\nWATCH-LIST PHRASES FOUND: seo, backlinks, first page of google\n\nMESSAGE:\nHello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    ],
+    "Ask Ollama Spam Or Genuine": [
+      [
+        {
+          "json": {
+            "model": "qwen2.5:3b",
+            "created_at": "2026-10-18T22:35:59.686130208Z",
+            "message": {
+              "role": "assistant",
+              "content": "{\n  \"verdict\": \"spam\",\n  \"reason\": \"unsolicited sales pitch\"\n}"
+            },
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 6028278620,
+            "load_duration": 19489649,
+            "prompt_eval_count": 268,
+            "prompt_eval_cached_count": 176,
+            "prompt_eval_duration": 3539381000,
+            "eval_count": 21,
+            "eval_duration": 2436511000
+          }
+        }
+      ]
+    ],
+    "Decide Spam Or Genuine": [
+      [
+        {
+          "json": {
+            "is_spam": true,
+            "decided_by": "model",
+            "reason": "unsolicited sales pitch",
+            "name": "Mark Johnson",
+            "email": "mark@rank-agency.example",
+            "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+            "submitted_at": "2026-10-18T19:01:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": [
+              "seo",
+              "backlinks",
+              "first page of google"
+            ]
+          }
+        }
+      ]
+    ],
+    "Genuine Enquiry?": [
+      [],
+      [
+        {
+          "json": {
+            "is_spam": true,
+            "decided_by": "model",
+            "reason": "unsolicited sales pitch",
+            "name": "Mark Johnson",
+            "email": "mark@rank-agency.example",
+            "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+            "submitted_at": "2026-10-18T19:01:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": [
+              "seo",
+              "backlinks",
+              "first page of google"
+            ]
+          }
+        }
+      ]
+    ],
+    "Spam Not Forwarded": [
+      [
+        {
+          "json": {
+            "is_spam": true,
+            "decided_by": "model",
+            "reason": "unsolicited sales pitch",
+            "name": "Mark Johnson",
+            "email": "mark@rank-agency.example",
+            "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
+            "submitted_at": "2026-10-18T19:01:00.000+01:00",
+            "notify_email": "you@example.com",
+            "from_email": "forms@example.com",
+            "link_count": 0,
+            "phrase_hits": [
+              "seo",
+              "backlinks",
+              "first page of google"
+            ]
+          }
+        }
+      ]
+    ]
+  }
+}
