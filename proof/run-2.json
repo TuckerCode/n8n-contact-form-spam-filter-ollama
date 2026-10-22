@@ -8,9 +8,9 @@
     "submittedAt": "2026-10-18T19:01:00.000+01:00",
     "formMode": "production"
   },
-  "execution_id": 163,
+  "execution_id": 268,
   "status": "success",
-  "seconds": 6.3,
+  "seconds": 8.2,
   "nodes_run": [
     "Test Webhook",
     "Unwrap Sample (test only)",
@@ -73,7 +73,7 @@
             "submittedAt": "2026-10-18T19:01:00.000+01:00",
             "formMode": "production",
             "ollama_url": "http://localhost:11434",
-            "ollama_model": "qwen2.5:3b",
+            "ollama_model": "qwen3:4b-instruct",
             "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
             "notify_email": "you@example.com",
             "from_email": "forms@example.com",
@@ -103,7 +103,7 @@
             "ollama_request": {
               "url": "http://localhost:11434/api/chat",
               "body": {
-                "model": "qwen2.5:3b",
+                "model": "qwen3:4b-instruct",
                 "stream": false,
                 "format": "json",
                 "options": {
@@ -129,21 +129,21 @@
       [
         {
           "json": {
-            "model": "qwen2.5:3b",
-            "created_at": "2026-10-18T22:35:59.686130208Z",
+            "model": "qwen3:4b-instruct",
+            "created_at": "2026-10-22T01:48:35.224821882Z",
             "message": {
               "role": "assistant",
-              "content": "{\n  \"verdict\": \"spam\",\n  \"reason\": \"unsolicited sales pitch\"\n}"
+              "content": "{\"verdict\": \"spam\", \"reason\": \"Contains unsolicited SEO pitch and backlinks, which are watch-list phrases for spam.\"}"
             },
             "done": true,
             "done_reason": "stop",
-            "total_duration": 6028278620,
-            "load_duration": 19489649,
+            "total_duration": 8053901801,
+            "load_duration": 1455074,
             "prompt_eval_count": 268,
             "prompt_eval_cached_count": 176,
-            "prompt_eval_duration": 3539381000,
-            "eval_count": 21,
-            "eval_duration": 2436511000
+            "prompt_eval_duration": 3193146000,
+            "eval_count": 30,
+            "eval_duration": 4716159000
           }
         }
       ]
@@ -154,7 +154,7 @@
           "json": {
             "is_spam": true,
             "decided_by": "model",
-            "reason": "unsolicited sales pitch",
+            "reason": "Contains unsolicited SEO pitch and backlinks, which are watch-list phrases for spam.",
             "name": "Mark Johnson",
             "email": "mark@rank-agency.example",
             "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
@@ -178,7 +178,7 @@
           "json": {
             "is_spam": true,
             "decided_by": "model",
-            "reason": "unsolicited sales pitch",
+            "reason": "Contains unsolicited SEO pitch and backlinks, which are watch-list phrases for spam.",
             "name": "Mark Johnson",
             "email": "mark@rank-agency.example",
             "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",
@@ -201,7 +201,7 @@
           "json": {
             "is_spam": true,
             "decided_by": "model",
-            "reason": "unsolicited sales pitch",
+            "reason": "Contains unsolicited SEO pitch and backlinks, which are watch-list phrases for spam.",
             "name": "Mark Johnson",
             "email": "mark@rank-agency.example",
             "message": "Hello, I was looking at your website and noticed it is not ranking on the first page of Google. Our team can fix that with white-hat SEO and backlinks at an affordable monthly price. Shall I send a proposal?",

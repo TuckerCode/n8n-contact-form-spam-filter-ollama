@@ -18,7 +18,7 @@ The spam check runs on your own machine through [Ollama](https://ollama.com), so
 
 ## Setup
 
-1. Install Ollama and pull a model: `ollama pull qwen2.5:3b`.
+1. Install Ollama and pull a model: `ollama pull qwen3:4b-instruct`.
 2. Import `workflow.json` into n8n.
 3. Open **Set Filter Settings**. Describe your business in one sentence in `business_description`, and set `notify_email` (where enquiries go) and `from_email` (the address your SMTP account sends from).
 4. Connect an SMTP credential on **Email Me The Enquiry**.
@@ -35,7 +35,7 @@ The spam check runs on your own machine through [Ollama](https://ollama.com), so
 
 ## Tested
 
-Six sample submissions were run through a test copy on n8n 2.35.7 with `qwen2.5:3b`. See [proof/README.md](proof/README.md).
+Six sample submissions were run through a test copy on n8n 2.35.7 with `qwen3:4b-instruct`. See [proof/README.md](proof/README.md).
 
 Get more free templates by email: https://stats.sender.net/forms/dR630O/view
 

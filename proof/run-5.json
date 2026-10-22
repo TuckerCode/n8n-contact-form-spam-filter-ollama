@@ -8,9 +8,9 @@
     "submittedAt": "2026-10-18T19:04:00.000+01:00",
     "formMode": "production"
   },
-  "execution_id": 166,
+  "execution_id": 271,
   "status": "success",
-  "seconds": 7.4,
+  "seconds": 8.3,
   "nodes_run": [
     "Test Webhook",
     "Unwrap Sample (test only)",
@@ -73,7 +73,7 @@
             "submittedAt": "2026-10-18T19:04:00.000+01:00",
             "formMode": "production",
             "ollama_url": "http://localhost:11434",
-            "ollama_model": "qwen2.5:3b",
+            "ollama_model": "qwen3:4b-instruct",
             "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
             "notify_email": "you@example.com",
             "from_email": "forms@example.com",
@@ -99,7 +99,7 @@
             "ollama_request": {
               "url": "http://localhost:11434/api/chat",
               "body": {
-                "model": "qwen2.5:3b",
+                "model": "qwen3:4b-instruct",
                 "stream": false,
                 "format": "json",
                 "options": {
@@ -125,21 +125,21 @@
       [
         {
           "json": {
-            "model": "qwen2.5:3b",
-            "created_at": "2026-10-18T22:36:16.469974304Z",
+            "model": "qwen3:4b-instruct",
+            "created_at": "2026-10-22T01:48:55.188101468Z",
             "message": {
               "role": "assistant",
-              "content": "{\"verdict\": \"genuine\", \"reason\": \"The message contains a complaint about a service received.\"}"
+              "content": "{\"verdict\": \"genuine\", \"reason\": \"This is a complaint about a product received, which is a valid customer interaction.\"}"
             },
             "done": true,
             "done_reason": "stop",
-            "total_duration": 6695565151,
-            "load_duration": 5227469,
+            "total_duration": 7280770541,
+            "load_duration": 1587728,
             "prompt_eval_count": 247,
             "prompt_eval_cached_count": 176,
-            "prompt_eval_duration": 2846191000,
-            "eval_count": 24,
-            "eval_duration": 3707212000
+            "prompt_eval_duration": 2452032000,
+            "eval_count": 30,
+            "eval_duration": 4778384000
           }
         }
       ]
@@ -150,7 +150,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "The message contains a complaint about a service received.",
+            "reason": "This is a complaint about a product received, which is a valid customer interaction.",
             "name": "Alex Rivera",
             "email": "alex.r@example.com",
             "message": "The lemon cake I collected yesterday was dry and the icing had melted. I paid 32 pounds. I'm not happy and would like to know what you can do.",
@@ -169,7 +169,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "The message contains a complaint about a service received.",
+            "reason": "This is a complaint about a product received, which is a valid customer interaction.",
             "name": "Alex Rivera",
             "email": "alex.r@example.com",
             "message": "The lemon cake I collected yesterday was dry and the icing had melted. I paid 32 pounds. I'm not happy and would like to know what you can do.",
@@ -189,7 +189,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "The message contains a complaint about a service received.",
+            "reason": "This is a complaint about a product received, which is a valid customer interaction.",
             "name": "Alex Rivera",
             "email": "alex.r@example.com",
             "message": "The lemon cake I collected yesterday was dry and the icing had melted. I paid 32 pounds. I'm not happy and would like to know what you can do.",

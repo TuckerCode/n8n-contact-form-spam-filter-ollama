@@ -8,9 +8,9 @@
     "submittedAt": "2026-10-18T19:05:00.000+01:00",
     "formMode": "production"
   },
-  "execution_id": 167,
+  "execution_id": 272,
   "status": "success",
-  "seconds": 4.6,
+  "seconds": 6.2,
   "nodes_run": [
     "Test Webhook",
     "Unwrap Sample (test only)",
@@ -73,7 +73,7 @@
             "submittedAt": "2026-10-18T19:05:00.000+01:00",
             "formMode": "production",
             "ollama_url": "http://localhost:11434",
-            "ollama_model": "qwen2.5:3b",
+            "ollama_model": "qwen3:4b-instruct",
             "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
             "notify_email": "you@example.com",
             "from_email": "forms@example.com",
@@ -101,7 +101,7 @@
             "ollama_request": {
               "url": "http://localhost:11434/api/chat",
               "body": {
-                "model": "qwen2.5:3b",
+                "model": "qwen3:4b-instruct",
                 "stream": false,
                 "format": "json",
                 "options": {
@@ -127,21 +127,21 @@
       [
         {
           "json": {
-            "model": "qwen2.5:3b",
-            "created_at": "2026-10-18T22:36:21.466747132Z",
+            "model": "qwen3:4b-instruct",
+            "created_at": "2026-10-22T01:49:02.251435745Z",
             "message": {
               "role": "assistant",
-              "content": "{\"verdict\": \"spam\", \"reason\": \"contains links\"}"
+              "content": "{\"verdict\": \"spam\", \"reason\": \"This is an unsolicited sales pitch for website services, targeting a bakery business.\"}"
             },
             "done": true,
             "done_reason": "stop",
-            "total_duration": 3953144119,
-            "load_duration": 2621899,
+            "total_duration": 5992522668,
+            "load_duration": 2413421,
             "prompt_eval_count": 229,
             "prompt_eval_cached_count": 176,
-            "prompt_eval_duration": 1866944000,
-            "eval_count": 15,
-            "eval_duration": 1953961000
+            "prompt_eval_duration": 1871929000,
+            "eval_count": 29,
+            "eval_duration": 4085350000
           }
         }
       ]

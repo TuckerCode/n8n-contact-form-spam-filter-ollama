@@ -8,9 +8,9 @@
     "submittedAt": "2026-10-18T19:03:00.000+01:00",
     "formMode": "production"
   },
-  "execution_id": 165,
+  "execution_id": 270,
   "status": "success",
-  "seconds": 5.6,
+  "seconds": 6.2,
   "nodes_run": [
     "Test Webhook",
     "Unwrap Sample (test only)",
@@ -73,7 +73,7 @@
             "submittedAt": "2026-10-18T19:03:00.000+01:00",
             "formMode": "production",
             "ollama_url": "http://localhost:11434",
-            "ollama_model": "qwen2.5:3b",
+            "ollama_model": "qwen3:4b-instruct",
             "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
             "notify_email": "you@example.com",
             "from_email": "forms@example.com",
@@ -99,7 +99,7 @@
             "ollama_request": {
               "url": "http://localhost:11434/api/chat",
               "body": {
-                "model": "qwen2.5:3b",
+                "model": "qwen3:4b-instruct",
                 "stream": false,
                 "format": "json",
                 "options": {
@@ -125,21 +125,21 @@
       [
         {
           "json": {
-            "model": "qwen2.5:3b",
-            "created_at": "2026-10-18T22:36:08.998825079Z",
+            "model": "qwen3:4b-instruct",
+            "created_at": "2026-10-22T01:48:47.511232307Z",
             "message": {
               "role": "assistant",
-              "content": "{\"verdict\": \"genuine\", \"reason\": \"Are you open on Sundays?\"}"
+              "content": "{\"verdict\": \"genuine\", \"reason\": \"A customer is asking about bakery hours on Sundays, which is a legitimate inquiry.\"}"
             },
             "done": true,
             "done_reason": "stop",
-            "total_duration": 4476914439,
-            "load_duration": 3758896,
+            "total_duration": 5825783850,
+            "load_duration": 1294028,
             "prompt_eval_count": 218,
             "prompt_eval_cached_count": 176,
-            "prompt_eval_duration": 1479038000,
-            "eval_count": 20,
-            "eval_duration": 2982663000
+            "prompt_eval_duration": 1612080000,
+            "eval_count": 30,
+            "eval_duration": 4190090000
           }
         }
       ]
@@ -150,7 +150,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "Are you open on Sundays?",
+            "reason": "A customer is asking about bakery hours on Sundays, which is a legitimate inquiry.",
             "name": "Tom",
             "email": "tom.b@example.co.uk",
             "message": "Are you open on Sundays?",
@@ -169,7 +169,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "Are you open on Sundays?",
+            "reason": "A customer is asking about bakery hours on Sundays, which is a legitimate inquiry.",
             "name": "Tom",
             "email": "tom.b@example.co.uk",
             "message": "Are you open on Sundays?",
@@ -189,7 +189,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "Are you open on Sundays?",
+            "reason": "A customer is asking about bakery hours on Sundays, which is a legitimate inquiry.",
             "name": "Tom",
             "email": "tom.b@example.co.uk",
             "message": "Are you open on Sundays?",

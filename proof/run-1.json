@@ -8,9 +8,9 @@
     "submittedAt": "2026-10-18T19:00:00.000+01:00",
     "formMode": "production"
   },
-  "execution_id": 162,
+  "execution_id": 267,
   "status": "success",
-  "seconds": 28.3,
+  "seconds": 14.3,
   "nodes_run": [
     "Test Webhook",
     "Unwrap Sample (test only)",
@@ -73,7 +73,7 @@
             "submittedAt": "2026-10-18T19:00:00.000+01:00",
             "formMode": "production",
             "ollama_url": "http://localhost:11434",
-            "ollama_model": "qwen2.5:3b",
+            "ollama_model": "qwen3:4b-instruct",
             "business_description": "a small bakery in Leeds that takes cake orders and runs baking classes",
             "notify_email": "you@example.com",
             "from_email": "forms@example.com",
@@ -99,7 +99,7 @@
             "ollama_request": {
               "url": "http://localhost:11434/api/chat",
               "body": {
-                "model": "qwen2.5:3b",
+                "model": "qwen3:4b-instruct",
                 "stream": false,
                 "format": "json",
                 "options": {
@@ -125,21 +125,21 @@
       [
         {
           "json": {
-            "model": "qwen2.5:3b",
-            "created_at": "2026-10-18T22:35:52.258106843Z",
+            "model": "qwen3:4b-instruct",
+            "created_at": "2026-10-22T01:48:26.632589976Z",
             "message": {
               "role": "assistant",
-              "content": "{\n  \"verdict\": \"genuine\",\n  \"reason\": \"an order for a cake\"\n}"
+              "content": "{\"verdict\": \"genuine\", \"reason\": \"This is a clear request for a cake order with a specific date and cost inquiry, typical of a customer contacting a bakery.\"}"
             },
             "done": true,
             "done_reason": "stop",
-            "total_duration": 25294597814,
-            "load_duration": 15876328422,
+            "total_duration": 13808534376,
+            "load_duration": 1393033,
             "prompt_eval_count": 241,
-            "prompt_eval_cached_count": 0,
-            "prompt_eval_duration": 6672596000,
-            "eval_count": 23,
-            "eval_duration": 2596046000
+            "prompt_eval_cached_count": 4,
+            "prompt_eval_duration": 7811481000,
+            "eval_count": 39,
+            "eval_duration": 5821230000
           }
         }
       ]
@@ -150,7 +150,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "an order for a cake",
+            "reason": "This is a clear request for a cake order with a specific date and cost inquiry, typical of a customer contacting a bakery.",
             "name": "Priya Shah",
             "email": "priya.shah@example.com",
             "message": "Hi! Could you make a chocolate birthday cake for 12 people for Saturday 25 October? What would it cost?",
@@ -169,7 +169,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "an order for a cake",
+            "reason": "This is a clear request for a cake order with a specific date and cost inquiry, typical of a customer contacting a bakery.",
             "name": "Priya Shah",
             "email": "priya.shah@example.com",
             "message": "Hi! Could you make a chocolate birthday cake for 12 people for Saturday 25 October? What would it cost?",
@@ -189,7 +189,7 @@
           "json": {
             "is_spam": false,
             "decided_by": "model",
-            "reason": "an order for a cake",
+            "reason": "This is a clear request for a cake order with a specific date and cost inquiry, typical of a customer contacting a bakery.",
             "name": "Priya Shah",
             "email": "priya.shah@example.com",
             "message": "Hi! Could you make a chocolate birthday cake for 12 people for Saturday 25 October? What would it cost?",
